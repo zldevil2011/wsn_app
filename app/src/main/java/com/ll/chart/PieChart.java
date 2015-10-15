@@ -132,14 +132,15 @@ public class PieChart extends Activity {
             //
             // TODO: http request.
             //
+            String res = "failed";
             try {
-                String res = getDataByGet("http://www.baidu.com");
+                res = getDataByGet("http://www.baidu.com");
             } catch (Exception e) {
                 e.printStackTrace();
             }
             Message msg = new Message();
             Bundle data = new Bundle();
-            data.putString("value","请求结果");
+            data.putString("value",res);
             msg.setData(data);
             handler.sendMessage(msg);
         }
