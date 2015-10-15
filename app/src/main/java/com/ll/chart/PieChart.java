@@ -15,6 +15,7 @@ import org.achartengine.model.XYSeries;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -44,26 +45,50 @@ public class PieChart extends Activity {
     private Spinner spinner;
     private ArrayAdapter<String> adapter;
     private String aim_url = "";
+    private LinearLayout layout;
+    private static JSONArray jsonArray = null;
+    private String title = "";
+    private String x_lable = "";
+    private String y_label = "";
+    private double ph[] = new double[100];
+    private double x_data[] = new double[100];
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pie_chart);
-        LinearLayout layout = (LinearLayout)findViewById(R.id.chart);
+        layout = (LinearLayout)findViewById(R.id.chart);
         spinner = (Spinner) findViewById(R.id.water_type_choice);
         adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, m);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new SpinnerSelectedListener());
         spinner.setVisibility(View.VISIBLE);
+        initData();
+    }
 
-
-        String[] titles = new String[] { "温度"};
-        List<double[]> x = new ArrayList<double[]>();
-        for (int i = 0; i < titles.length; i++) {
-            x.add(new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 });
+    public void initData(){
+        aim_url = getString(R.string.IP) + "/data/water";
+        try {
+            new Thread(runnable).start();
+            Toast.makeText(PieChart.this, "fine", Toast.LENGTH_SHORT).show();
+            try{
+                Log.v("zl_debug_length", jsonArray.length() + "");
+            }catch (Exception e){
+                Log.v("zl_debug_length_failed", "get Length failed");
+            }
+        } catch (Exception e) {
+            Toast.makeText(PieChart.this, "failed", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
         }
+//        createChart(new String[] {"温度"}, new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }, new double[] { 12.3, 12.5, 13.8, 16.8, 20.4, 24.4, 26.4, 26.1, 23.6, 20.3, 17.2, 13.9 }, "Average temperature", "Month", "Temperature");
+
+    }
+
+    public void createChart(String[] A, double[] x_data, double[] y_data, String title, String x_label, String y_label){
+        List<double[]> x = new ArrayList<double[]>();
+        x.add(x_data);
         List<double[]> values = new ArrayList<double[]>();
-        values.add(new double[] { 12.3, 12.5, 13.8, 16.8, 20.4, 24.4, 26.4, 26.1, 23.6, 20.3, 17.2, 13.9 });
+        values.add(y_data);
         int[] colors = new int[] { BLUE };
         PointStyle[] styles = new PointStyle[] { PointStyle.CIRCLE};
         XYMultipleSeriesRenderer renderer = buildRenderer(colors, styles);
@@ -71,7 +96,7 @@ public class PieChart extends Activity {
         for (int i = 0; i < length; i++) {
             ((XYSeriesRenderer) renderer.getSeriesRendererAt(i)).setFillPoints(true);
         }
-        setChartSettings(renderer, "Average temperature", "Month", "Temperature", 0, 13, 0, 30, LTGRAY, LTGRAY);
+        setChartSettings(renderer, title, x_label, y_label, 0, 13, 0, 30, LTGRAY, LTGRAY);
         renderer.setXLabels(12);
         renderer.setYLabels(10);
         renderer.setShowGrid(true);
@@ -85,45 +110,30 @@ public class PieChart extends Activity {
         renderer.setMarginsColor(WHITE);
         renderer.setShowLegend(false);
 //        renderer.setMarginsColor(Color.argb(0x00, 0x01, 0x01, 0x01));
-        View view = ChartFactory.getLineChartView(this, buildDataset(titles, x, values), renderer);
+        View view = ChartFactory.getLineChartView(this, buildDataset(A, x, values), renderer);
 
 //        view.setBackgroundColor(GREEN);
         layout.addView(view);//setContentView(view);
     }
 
-
     class SpinnerSelectedListener implements AdapterView.OnItemSelectedListener {
 
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
             aim_url = getString(R.string.IP) + m_url[arg2];
-//            aim_url = "http://www.baidu.com";
-            aim_url = "http://120.27.35.194:8000/api/data/water/";
-//            Toast.makeText(PieChart.this, aim, Toast.LENGTH_SHORT).show();
-            try {
-                Log.v("zl_debug", "here");
-//                String dataByGet = submitDataByDoPost("123/", "456", aim);
-                String dataByGet = "tmp";
-
-                new Thread(runnable).start();
-                Log.v("zl_debug", dataByGet);
-                Log.v("zl_debug", "nothere");
-                Toast.makeText(PieChart.this, "fine", Toast.LENGTH_SHORT).show();
-            } catch (Exception e) {
-                Toast.makeText(PieChart.this, "failed", Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
-            }
         }
         public void onNothingSelected(AdapterView<?> arg0) {
 
         }
     }
 
-    Handler handler = new Handler(){
+    public Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             Bundle data = msg.getData();
             String val = data.getString("value");
+            createChart(new String[] {"水质量"}, new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }, new double[] { 12.3, 12.5, 13.8, 16.8, 20.4, 24.4, 26.4, 26.1, 23.6, 20.3, 17.2, 13.9 }, title, x_lable, y_label);
+
             Log.i("zl_debug","请求结果-->" + val);
         }
     };
@@ -202,35 +212,37 @@ public class PieChart extends Activity {
 
     public String getDataByGet(String path) throws Exception {
         URL Url = new URL(path);
-        Log.v("zl_debug", path);
         HttpURLConnection HttpConn = (HttpURLConnection) Url.openConnection();
-        Log.v("zl_debug", "1");
         HttpConn.setRequestMethod("GET");
-        Log.v("zl_debug", "2");
         HttpConn.setReadTimeout(5000);
-//        HttpConn.setDoOutput(false);
-//        HttpConn.setRequestProperty("Content-Type", "application/json");
-//        OutputStream os = HttpConn.getOutputStream();
-        Log.v("zl_debug", "is it here?");
 
-//        Log.v("zl_debug", String.valueOf(HttpConn.getContentEncoding()));
         if (HttpConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
             InputStreamReader  isr = new InputStreamReader(HttpConn.getInputStream());
             String content = "";
-            // read
             int i;
             while ((i = isr.read()) != -1) {
                 content = content + (char) i;
             }
             isr.close();
             JSONObject jsonObject = new JSONObject(content);
-            JSONArray jsonArray = new JSONArray(jsonObject.getString("water"));
-            for(i = 0; i < jsonArray.length(); ++i){
-                JSONObject tmp = jsonArray.getJSONObject(i);
+            jsonArray = new JSONArray(jsonObject.getString("water"));
+
+
+            title = "PH2.5";
+            x_lable = "月份";
+            y_label = "含量";
+            for(int j = 0; j < jsonArray.length(); ++j){
+                JSONObject tmp = null;
+                tmp = jsonArray.getJSONObject(j);
                 Log.v("zl_debug", tmp.getInt("water_id") + "");
+                ph[j] = tmp.getDouble("ph");
+                x_data[j] = tmp.getDouble("water_id");
             }
-            Log.v("zl_debug", jsonObject.getString("water").length() + "");
-            Log.v("zl_debug", content);
+            Log.v("zl_debug", String.valueOf(ph));
+//            createChart(new String[] {"温度"}, new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }, new double[] { 12.3, 12.5, 13.8, 16.8, 20.4, 24.4, 26.4, 26.1, 23.6, 20.3, 17.2, 13.9 }, "Average temperature", "Month", "Temperature");
+//
+//            createChart(new String[] {"水质量"}, new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }, new double[] { 12.3, 12.5, 13.8, 16.8, 20.4, 24.4, 26.4, 26.1, 23.6, 20.3, 17.2, 13.9 }, title, x_lable, y_label);
+
             return "login_success";
         }
 
