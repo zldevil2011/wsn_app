@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">Wsn</string>
+    <string name="IP">http://120.27.35.194:8070</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_data_info">DataInfo</string>
+    <string name="title_activity_pie_chart">PieChart</string>
 </resources>

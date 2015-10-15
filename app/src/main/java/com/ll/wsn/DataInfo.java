@@ -18,7 +18,9 @@ import android.widget.TextView;
 import org.w3c.dom.Text;
 
 public class DataInfo extends Activity {
-    private static final String[] m={"环境","水质"};
+    private static final String[] m={"PM2.5","风速", "雨量", "紫外线指数", "光量子", "风向"};
+    private static final String[] m_url={"/air/?air_type=pm25","/air/?air_type=cloud",
+            "/air/?air_type=rain", "/air/?air_type=ziwai", "/air/?air_type=guang", "/air/?air_type=clouddir"};
     private TextView view;
     private Spinner spinner;
     private ArrayAdapter<String> adapter;
@@ -42,7 +44,7 @@ public class DataInfo extends Activity {
         web = (WebView)findViewById(R.id.wsn_web);
         WebSettings web_settings = web.getSettings();
         web_settings.setJavaScriptEnabled(true);
-        web.loadUrl("http://120.27.35.194:8070/air/");
+        web.loadUrl(getString(R.string.IP) + "/air/");
         web.setWebViewClient(new WebViewClient(){
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url){
@@ -55,14 +57,8 @@ public class DataInfo extends Activity {
     class SpinnerSelectedListener implements AdapterView.OnItemSelectedListener {
 
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-//            view.setText("选择数据："+m[arg2]);
-            if("环境" == m[arg2]){
-                web.loadUrl("http://120.27.35.194:8070/air/");
-            }else{
-                web.loadUrl("http://120.27.35.194:8070/water/");
-            }
+            web.loadUrl( getString(R.string.IP) + m_url[arg2]);
         }
-
         public void onNothingSelected(AdapterView<?> arg0) {
 
         }

@@ -12,6 +12,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.ll.chart.BarChart;
+import com.ll.chart.PieChart;
 import com.ll.view.SexangleImageViews;
 import com.ll.view.SexangleViewGroup;
 
@@ -71,6 +73,8 @@ public class MainActivity extends Activity {
                     break;
                 case ID+1:
                     Toast.makeText(MainActivity.this,setName(1), Toast.LENGTH_SHORT).show();
+                    Intent intent1 = new Intent(MainActivity.this, PieChart.class);
+                    startActivity(intent1);
                     break;
                 case ID+2:
                     Toast.makeText(MainActivity.this,setName(2), Toast.LENGTH_SHORT).show();
@@ -169,5 +173,6 @@ public class MainActivity extends Activity {
 //
 //        return super.onOptionsItemSelected(item);
 //    }
-
 }
+
+
