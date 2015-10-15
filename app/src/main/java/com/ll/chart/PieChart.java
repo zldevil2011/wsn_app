@@ -1,5 +1,6 @@
 package com.ll.chart;
 
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -13,6 +14,7 @@ import org.achartengine.model.XYMultipleSeriesDataset;
 import org.achartengine.model.XYSeries;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -41,7 +43,7 @@ public class PieChart extends Activity {
             "/water/?water_type=turbidity", "/water/?water_type=water_level", "/water/?water_type=conductivity"};
     private Spinner spinner;
     private ArrayAdapter<String> adapter;
-
+    private String aim_url = "";
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,11 +95,11 @@ public class PieChart extends Activity {
     class SpinnerSelectedListener implements AdapterView.OnItemSelectedListener {
 
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-            String aim = getString(R.string.IP) + m_url[arg2];
-            aim = "http://www.baidu.com";
+            aim_url = getString(R.string.IP) + m_url[arg2];
+//            aim_url = "http://www.baidu.com";
+            aim_url = "http://120.27.35.194:8000/api/data/water/";
 //            Toast.makeText(PieChart.this, aim, Toast.LENGTH_SHORT).show();
             try {
-
                 Log.v("zl_debug", "here");
 //                String dataByGet = submitDataByDoPost("123/", "456", aim);
                 String dataByGet = "tmp";
@@ -122,19 +124,17 @@ public class PieChart extends Activity {
             super.handleMessage(msg);
             Bundle data = msg.getData();
             String val = data.getString("value");
-            Log.i("mylog","请求结果-->" + val);
+            Log.i("zl_debug","请求结果-->" + val);
         }
     };
 
     Runnable runnable = new Runnable(){
         @Override
         public void run() {
-            //
-            // TODO: http request.
-            //
+//            Todo the request
             String res = "failed";
             try {
-                res = getDataByGet("http://www.baidu.com");
+                res = getDataByGet(aim_url);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -215,9 +215,25 @@ public class PieChart extends Activity {
 
 //        Log.v("zl_debug", String.valueOf(HttpConn.getContentEncoding()));
         if (HttpConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            Log.v("zl_debug", "ok");
+            InputStreamReader  isr = new InputStreamReader(HttpConn.getInputStream());
+            String content = "";
+            // read
+            int i;
+            while ((i = isr.read()) != -1) {
+                content = content + (char) i;
+            }
+            isr.close();
+            JSONObject jsonObject = new JSONObject(content);
+            JSONArray jsonArray = new JSONArray(jsonObject.getString("water"));
+            for(i = 0; i < jsonArray.length(); ++i){
+                JSONObject tmp = jsonArray.getJSONObject(i);
+                Log.v("zl_debug", tmp.getInt("water_id") + "");
+            }
+            Log.v("zl_debug", jsonObject.getString("water").length() + "");
+            Log.v("zl_debug", content);
             return "login_success";
         }
+
         Log.v("zl_debug", "sorry");
         return "login_failed";
     }
