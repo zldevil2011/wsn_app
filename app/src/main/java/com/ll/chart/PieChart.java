@@ -253,7 +253,8 @@ public class PieChart extends Activity {
 //                Log.v("zl_debug", tmp.getInt("water_id") + "");
                 ph[j] = tmp.getDouble(data_type);
                 Log.v("zl_debug_ph", String.valueOf(ph[j]));
-                x_data[j] = (tmp.getInt("water_id") + 0) * 1.0;
+                x_data[j] = tmp.getDouble("water_id");
+//                x_data[j] = (tmp.getInt("water_id") + 0) * 1.0;
 //                Log.v("zl_debug_water_id", String.valueOf(x_data[j]));
             }
 //            Log.v("zl_debug", String.valueOf(ph));
