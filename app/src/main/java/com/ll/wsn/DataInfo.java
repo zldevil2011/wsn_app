@@ -44,7 +44,7 @@ public class DataInfo extends Activity {
         web = (WebView)findViewById(R.id.wsn_web);
         WebSettings web_settings = web.getSettings();
         web_settings.setJavaScriptEnabled(true);
-        web.loadUrl(getString(R.string.IP) + "/air/");
+        web.loadUrl(getString(R.string.IP) + ":8070/air/");
         web.setWebViewClient(new WebViewClient(){
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url){
@@ -57,7 +57,7 @@ public class DataInfo extends Activity {
     class SpinnerSelectedListener implements AdapterView.OnItemSelectedListener {
 
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-            web.loadUrl( getString(R.string.IP) + m_url[arg2]);
+            web.loadUrl( getString(R.string.IP) + ":8070/" + m_url[arg2]);
         }
         public void onNothingSelected(AdapterView<?> arg0) {
 
