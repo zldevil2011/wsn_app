@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.ll.wsn.Temperature"
-    android:background="@drawable/bgg">
+    android:background="@drawable/bgg"
+    android:transitionGroup="false">
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -70,12 +71,30 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/border1"
-                >
+                android:alpha="50"
+                android:orientation="vertical"
+                android:divider="#33ff09">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="最近天气"
                     />
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="星期一：晴"/>
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="星期二：晴"/>
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="星期三：晴"/>
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="星期四：晴"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

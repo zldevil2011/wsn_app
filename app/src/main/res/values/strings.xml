@@ -8,4 +8,7 @@
     <string name="title_activity_pie_chart">PieChart</string>
     <string name="title_activity_temperature">temperature</string>
     <string name="return_btn_name">返回</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_about_us">about_us</string>
+    <string name="title_activity_user">User</string>
 </resources>

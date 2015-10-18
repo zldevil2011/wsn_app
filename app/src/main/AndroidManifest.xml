@@ -31,6 +31,18 @@
             android:name=".Temperature"
             android:label="@string/title_activity_temperature" >
         </activity>
+        <activity
+            android:name="com.ll.settings.Settings"
+            android:label="@string/title_activity_settings" >
+        </activity>
+        <activity
+            android:name="com.ll.settings.About_us"
+            android:label="@string/title_activity_about_us" >
+        </activity>
+        <activity
+            android:name="com.ll.user.User"
+            android:label="@string/title_activity_user" >
+        </activity>
     </application>
 
 </manifest>

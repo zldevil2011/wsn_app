@@ -5,15 +5,13 @@ import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.ll.chart.BarChart;
 import com.ll.chart.PieChart;
+import com.ll.settings.Settings;
+import com.ll.user.User;
 import com.ll.view.SexangleImageViews;
 import com.ll.view.SexangleViewGroup;
 
@@ -70,17 +68,22 @@ public class MainActivity extends Activity {
                     Toast.makeText(MainActivity.this, setName(0), Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(MainActivity.this, DataInfo.class);
                     startActivity(intent);
+                    MainActivity.this.finish();
                     break;
                 case ID+1:
                     Toast.makeText(MainActivity.this,setName(1), Toast.LENGTH_SHORT).show();
                     Intent intent1 = new Intent(MainActivity.this, PieChart.class);
                     startActivity(intent1);
+                    MainActivity.this.finish();
                     break;
                 case ID+2:
                     Toast.makeText(MainActivity.this,setName(2), Toast.LENGTH_SHORT).show();
                     break;
                 case ID+3:
                     Toast.makeText(MainActivity.this,setName(3), Toast.LENGTH_SHORT).show();
+                    Intent intent3 = new Intent(MainActivity.this, User.class);
+                    startActivity(intent3);
+                    MainActivity.this.finish();
                     break;
                 case ID+4:
                     Toast.makeText(MainActivity.this,setName(4), Toast.LENGTH_SHORT).show();
@@ -93,6 +96,9 @@ public class MainActivity extends Activity {
                     break;
                 case ID+6:
                     Toast.makeText(MainActivity.this,setName(6), Toast.LENGTH_SHORT).show();
+                    Intent intent6 = new Intent(MainActivity.this, Settings.class);
+                    startActivity(intent6);
+                    MainActivity.this.finish();
                     break;
             }
 
