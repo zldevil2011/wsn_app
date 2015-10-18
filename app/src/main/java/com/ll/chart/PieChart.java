@@ -40,8 +40,6 @@ import static android.graphics.Color.*;
 public class PieChart extends Activity {
 
     private static final String[] m={"PH值","DO值", "浑浊度", "水位", "电导率"};
-//    private static final String[] m_url={"/water/?water_type=ph","/water/?water_type=do",
-//            "/water/?water_type=turbidity", "/water/?water_type=water_level", "/water/?water_type=conductivity"};
     private static final String[] m_url={"ph","do","turbidity", "water_level", "conductivity"};
     private Spinner spinner;
     private ArrayAdapter<String> adapter;
@@ -58,6 +56,10 @@ public class PieChart extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pie_chart);
+        initUI();
+        initData();
+    }
+    public void initUI(){
         layout = (LinearLayout)findViewById(R.id.chart);
         spinner = (Spinner) findViewById(R.id.water_type_choice);
         adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, m);
@@ -65,11 +67,9 @@ public class PieChart extends Activity {
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new SpinnerSelectedListener());
         spinner.setVisibility(View.VISIBLE);
-        initData();
     }
-
     public void initData(){
-        aim_url = getString(R.string.IP) + ":8000/api/data/water";
+        aim_url = getString(R.string.IP) + ":8089/api/data/water";
         data_type = "ph";
         try {
             new Thread(runnable).start();
@@ -88,6 +88,7 @@ public class PieChart extends Activity {
     }
 
     public void createChart(String[] A, double[] x_data, double[] y_data, String title, String x_label, String y_label){
+        Log.v("zl_debug_createChart", title);
         List<double[]> x = new ArrayList<double[]>();
         x.clear();
         x.add(x_data);
@@ -119,6 +120,7 @@ public class PieChart extends Activity {
         view = ChartFactory.getLineChartView(this, buildDataset(A, x, values), renderer);
 
 //        view.setBackgroundColor(GREEN);
+        layout.removeAllViews();
         layout.addView(view);//setContentView(view);
     }
 
@@ -141,7 +143,7 @@ public class PieChart extends Activity {
         }
     }
 
-    public Handler handler = new Handler(){
+    Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -243,23 +245,18 @@ public class PieChart extends Activity {
             jsonArray = new JSONArray(jsonObject.getString("water"));
 
 
-            title = "PH2.5";
+            title = data_type;
             x_lable = "月份";
             y_label = "含量";
             Log.v("zl_debug_data_type", data_type);
             for(int j = 0; j < jsonArray.length(); ++j){
                 JSONObject tmp = null;
                 tmp = jsonArray.getJSONObject(j);
-//                Log.v("zl_debug", tmp.getInt("water_id") + "");
                 ph[j] = tmp.getDouble(data_type);
                 Log.v("zl_debug_ph", String.valueOf(ph[j]));
                 x_data[j] = tmp.getDouble("water_id");
-//                x_data[j] = (tmp.getInt("water_id") + 0) * 1.0;
-//                Log.v("zl_debug_water_id", String.valueOf(x_data[j]));
+
             }
-//            Log.v("zl_debug", String.valueOf(ph));
-//            createChart(new String[] {"温度"}, new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }, new double[] { 12.3, 12.5, 13.8, 16.8, 20.4, 24.4, 26.4, 26.1, 23.6, 20.3, 17.2, 13.9 }, "Average temperature", "Month", "Temperature");
-//
 //            createChart(new String[] {"水质量"}, new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }, new double[] { 12.3, 12.5, 13.8, 16.8, 20.4, 24.4, 26.4, 26.1, 23.6, 20.3, 17.2, 13.9 }, title, x_lable, y_label);
 
             return "login_success";
