@@ -19,20 +19,24 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint.Align;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.ll.util.HttpMethod;
+import com.ll.wsn.MainActivity;
 import com.ll.wsn.R;
 import com.ll.util.HttpMethod;
 import static android.graphics.Color.*;
@@ -58,6 +62,30 @@ public class PieChart extends Activity {
         setContentView(R.layout.activity_pie_chart);
         initUI();
         initData();
+        listener();
+    }
+    public void listener(){
+        Button ret = (Button)findViewById(R.id.btn_ret);
+        ret.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent();
+                myIntent = new Intent(PieChart.this, MainActivity.class);
+                startActivity(myIntent);
+                PieChart.this.finish();
+            }
+        });
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            Intent myIntent = new Intent();
+            myIntent = new Intent(PieChart.this, MainActivity.class);
+            startActivity(myIntent);
+            this.finish();
+        }
+        return super.onKeyDown(keyCode, event);
     }
     public void initUI(){
         layout = (LinearLayout)findViewById(R.id.chart);
@@ -102,17 +130,26 @@ public class PieChart extends Activity {
         for (int i = 0; i < length; i++) {
             ((XYSeriesRenderer) renderer.getSeriesRendererAt(i)).setFillPoints(true);
         }
-        setChartSettings(renderer, title, x_label, y_label, 0, 13, 0, 30, LTGRAY, LTGRAY);
+        double min = 999999.0, max = -999999.0;
+        for(int i = 0; i < y_data.length; ++i){
+            if(y_data[i] <= min){
+                min = y_data[i];
+            }
+            if(y_data[i] >= max){
+                max = 2*y_data[i];
+            }
+        }
+        setChartSettings(renderer, title, x_label, y_label, 0, 13, 0, max, LTGRAY, LTGRAY);
         renderer.setXLabels(12);
         renderer.setYLabels(10);
         renderer.setShowGrid(true);
         renderer.setXLabelsAlign(Align.RIGHT);
         renderer.setYLabelsAlign(Align.RIGHT);
 //        renderer.setZoomButtonsVisible(true);
-        renderer.setPanLimits(new double[]{0, 13, 0, 30});
-        renderer.setZoomLimits(new double[]{0, 13, 0, 30});
+        renderer.setPanLimits(new double[]{0, 13, 0, max});
+        renderer.setZoomLimits(new double[]{0, 13, 0, max});
         renderer.setApplyBackgroundColor(true);
-        renderer.setBackgroundColor(Color.WHITE);
+        renderer.setBackgroundColor(Color.GRAY);
         renderer.setMarginsColor(WHITE);
         renderer.setShowLegend(false);
 //        renderer.setMarginsColor(Color.argb(0x00, 0x01, 0x01, 0x01));
@@ -221,7 +258,7 @@ public class PieChart extends Activity {
             int seriesLength = xV.length;
             for (int k = 0; k < seriesLength; k++) {
                 series.add(xV[k], yV[k]);
-                Log.v("zl_debug_y_data", yV[k] + "");
+//                Log.v("zl_debug_y_data", yV[k] + "");
             }
             dataset.addSeries(series);
         }
@@ -247,15 +284,14 @@ public class PieChart extends Activity {
 
             title = data_type;
             x_lable = "月份";
-            y_label = "含量";
+            y_label = title + "含量";
             Log.v("zl_debug_data_type", data_type);
             for(int j = 0; j < jsonArray.length(); ++j){
                 JSONObject tmp = null;
                 tmp = jsonArray.getJSONObject(j);
                 ph[j] = tmp.getDouble(data_type);
-                Log.v("zl_debug_ph", String.valueOf(ph[j]));
+//                Log.v("zl_debug_ph", String.valueOf(ph[j]));
                 x_data[j] = tmp.getDouble("water_id");
-
             }
 //            createChart(new String[] {"水质量"}, new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }, new double[] { 12.3, 12.5, 13.8, 16.8, 20.4, 24.4, 26.4, 26.1, 23.6, 20.3, 17.2, 13.9 }, title, x_lable, y_label);
 

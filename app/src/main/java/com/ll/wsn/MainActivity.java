@@ -84,6 +84,9 @@ public class MainActivity extends Activity {
                     break;
                 case ID+4:
                     Toast.makeText(MainActivity.this,setName(4), Toast.LENGTH_SHORT).show();
+                    Intent intent4 = new Intent(MainActivity.this, Temperature.class);
+                    startActivity(intent4);
+                    MainActivity.this.finish();
                     break;
                 case ID+5:
                     Toast.makeText(MainActivity.this,setName(5), Toast.LENGTH_SHORT).show();

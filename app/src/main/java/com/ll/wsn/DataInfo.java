@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -30,7 +32,9 @@ public class DataInfo extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data_info);
         initView();
+        listener();
     }
+
     public void initView(){
         view = (TextView) findViewById(R.id.spinnerText);
         spinner = (Spinner) findViewById(R.id.data_type_choice);
@@ -45,15 +49,37 @@ public class DataInfo extends Activity {
         WebSettings web_settings = web.getSettings();
         web_settings.setJavaScriptEnabled(true);
         web.loadUrl(getString(R.string.IP) + ":8070/air/");
-        web.setWebViewClient(new WebViewClient(){
+        web.setWebViewClient(new WebViewClient() {
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url){
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
                 return true;
             }
         });
     }
-
+    public void listener(){
+        Button ret = (Button)findViewById(R.id.btn_ret);
+        ret.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent();
+                myIntent = new Intent(DataInfo.this, MainActivity.class);
+                startActivity(myIntent);
+                DataInfo.this.finish();
+            }
+        });
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            Intent myIntent = new Intent();
+            myIntent = new Intent(DataInfo.this, MainActivity.class);
+            startActivity(myIntent);
+            this.finish();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
     class SpinnerSelectedListener implements AdapterView.OnItemSelectedListener {
 
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {

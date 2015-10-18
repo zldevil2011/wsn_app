@@ -27,6 +27,10 @@
             android:name="com.ll.chart.PieChart"
             android:label="@string/title_activity_pie_chart" >
         </activity>
+        <activity
+            android:name=".Temperature"
+            android:label="@string/title_activity_temperature" >
+        </activity>
     </application>
 
 </manifest>
