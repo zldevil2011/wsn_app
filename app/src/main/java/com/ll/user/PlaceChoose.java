@@ -1,5 +1,6 @@
 package com.ll.user;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -114,6 +115,10 @@ public class PlaceChoose extends BaseActivity implements View.OnClickListener, O
     }
 
     private void showSelectedResult() {
+        Intent place2user = new Intent(PlaceChoose.this, User.class);
+        place2user.putExtra("place", mCurrentProviceName + " " + mCurrentCityName + " " + mCurrentDistrictName);
+        startActivity(place2user);
+        this.finish();
         Toast.makeText(PlaceChoose.this, "当前选中:" + mCurrentProviceName + "," + mCurrentCityName + ","
                 + mCurrentDistrictName + "," + mCurrentZipCode, Toast.LENGTH_SHORT).show();
     }

@@ -60,9 +60,13 @@ public class User extends Activity {
         map.put("title", "性别");
         map.put("info", "男");
         contents.add(map);
+
+        Intent intent=getIntent();
+        String StringE=intent.getStringExtra("place");
+
         map = new HashMap<String, Object>();
         map.put("title", "地区");
-        map.put("info", "北京海淀");
+        map.put("info", StringE);
         contents.add(map);
         SimpleAdapter adapter = new SimpleAdapter(this, contents, R.layout.user_info_item,
                 new String[]{"title", "info"},new int[]{R.id.title,R.id.info});
