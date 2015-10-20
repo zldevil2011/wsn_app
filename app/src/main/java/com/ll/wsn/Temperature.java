@@ -36,7 +36,6 @@ public class Temperature extends Activity {
         listener();
     }
     public void initData(){
-        Toast.makeText(Temperature.this, "获取数据中...", Toast.LENGTH_SHORT).show();
         wea_time = (TextView)findViewById(R.id.wea_time);
         wea_tem = (TextView)findViewById(R.id.wea_tem);
         wea_wea = (TextView)findViewById(R.id.wea_wea);
@@ -47,10 +46,11 @@ public class Temperature extends Activity {
         aim_url = getString(R.string.IP) + ":8089/api/data/weather/";
         try {
             new Thread(runnable).start();
-            Toast.makeText(Temperature.this, "获取成功", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(Temperature.this, "获取数据中...", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(Temperature.this, "获取成功", Toast.LENGTH_SHORT).show();
 
         } catch (Exception e) {
-            Toast.makeText(Temperature.this, "获取失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(Temperature.this, "获取数据失败，请检查网络连接", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
     }

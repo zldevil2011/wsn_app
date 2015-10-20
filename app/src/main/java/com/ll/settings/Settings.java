@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ll.user.PlaceChoose;
 import com.ll.wsn.MainActivity;
 import com.ll.wsn.R;
 
@@ -56,13 +57,19 @@ public class Settings extends Activity {
         check_update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Toast.makeText(Settings.this, "当前已是最新版本", Toast.LENGTH_SHORT).show();
+                Intent myIntent = new Intent();
+                myIntent = new Intent(Settings.this, PlaceChoose.class);
+                startActivity(myIntent);
+                Settings.this.finish();
             }
         });
         TextView logout = (TextView)findViewById(R.id.logout);
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {Intent myIntent = new Intent();
+            public void onClick(View v) {
+                Intent myIntent = new Intent();
                 myIntent = new Intent(Settings.this, MainActivity.class);
                 startActivity(myIntent);
                 Settings.this.finish();
