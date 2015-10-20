@@ -3,6 +3,7 @@ package com.ll.user;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,8 +30,20 @@ public class PlaceChoose extends BaseActivity implements View.OnClickListener, O
         setUpViews();
         setUpListener();
         setUpData();
+        listener();
     }
-
+    public void listener(){
+        Button ret = (Button)findViewById(R.id.btn_ret);
+        ret.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent();
+                myIntent = new Intent(PlaceChoose.this, User.class);
+                startActivity(myIntent);
+                PlaceChoose.this.finish();
+            }
+        });
+    }
     private void setUpViews() {
         mViewProvince = (WheelView) findViewById(R.id.id_province);
         mViewCity = (WheelView) findViewById(R.id.id_city);
@@ -121,5 +134,15 @@ public class PlaceChoose extends BaseActivity implements View.OnClickListener, O
         this.finish();
         Toast.makeText(PlaceChoose.this, "当前选中:" + mCurrentProviceName + "," + mCurrentCityName + ","
                 + mCurrentDistrictName + "," + mCurrentZipCode, Toast.LENGTH_SHORT).show();
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event){
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            Intent myIntent = new Intent();
+            myIntent = new Intent(PlaceChoose.this, User.class);
+            startActivity(myIntent);
+            this.finish();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }
