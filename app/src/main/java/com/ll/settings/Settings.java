@@ -59,10 +59,6 @@ public class Settings extends Activity {
             public void onClick(View v) {
 
                 Toast.makeText(Settings.this, "当前已是最新版本", Toast.LENGTH_SHORT).show();
-                Intent myIntent = new Intent();
-                myIntent = new Intent(Settings.this, PlaceChoose.class);
-                startActivity(myIntent);
-                Settings.this.finish();
             }
         });
         TextView logout = (TextView)findViewById(R.id.logout);
