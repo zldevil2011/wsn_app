@@ -1,0 +1,60 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:orientation="vertical"
+
+    >
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/orange"
+        android:layout_weight="1">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1">
+            <Button
+                android:id="@+id/btn_ret"
+                android:layout_width="wrap_content"
+                android:layout_height="100px"
+                android:text="@string/return_btn_name"
+                android:textSize="@dimen/return_btn_size"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_weight="1">
+            <TextView
+                android:id="@+id/operate_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="修改名字"
+                android:layout_margin="10px"/>
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1">
+            <Button
+                android:id="@+id/btn_save"
+                android:layout_width="wrap_content"
+                android:layout_height="100px"
+                android:text="@string/return_btn_save"
+                android:layout_gravity="right"
+                android:textSize="@dimen/return_btn_size"/>
+        </LinearLayout>
+
+    </LinearLayout>
+    <EditText
+        android:id="@+id/edit_info"
+        android:paddingTop="15sp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

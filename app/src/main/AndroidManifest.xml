@@ -47,6 +47,10 @@
             android:name="com.ll.user.PlaceChoose"
             android:label="@string/title_activity_place_choose" >
         </activity>
+        <activity
+            android:name="com.ll.user.EditInfo"
+            android:label="@string/title_activity_edit_info" >
+        </activity>
     </application>
 
 </manifest>

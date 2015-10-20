@@ -25,6 +25,9 @@ import java.util.Map;
 
 public class User extends Activity {
     private ListView user;
+    private String[] strs = new String[] {
+            "头像", "姓名", "昵称", "账户名", "性别", "地区"
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,9 +37,7 @@ public class User extends Activity {
     }
     public void initUI(){
         user = (ListView)findViewById(R.id.user);
-        String[] strs = new String[] {
-                "头像", "姓名", "昵称", "账户名", "性别", "地区"
-        };
+
 //        user.setAdapter(new ArrayAdapter<String>(this,
 //                android.R.layout.simple_list_item_1, strs));
         List<Map<String, Object>> contents = new ArrayList<Map<String, Object>>();
@@ -76,12 +77,23 @@ public class User extends Activity {
         user.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(position == 5){
-                    Intent myIntent = new Intent();
+                Intent myIntent = new Intent();
+                myIntent.putExtra("operate_name", "oko");
+                if(position == 0){
+                    myIntent = new Intent(User.this, EditInfo.class);
+                }else if(position==1){
+                    myIntent = new Intent(User.this, EditInfo.class);
+                }else if(position==2){
+                    myIntent = new Intent(User.this, EditInfo.class);
+                }else if(position==3){
+                    myIntent = new Intent(User.this, EditInfo.class);
+                }else if(position==4){
+                    myIntent = new Intent(User.this, EditInfo.class);
+                }if(position==5){
                     myIntent = new Intent(User.this, PlaceChoose.class);
-                    startActivity(myIntent);
-//                    User.this.finish();
                 }
+                startActivity(myIntent);
+//                User.this.finish();
             }
         });
         Button ret = (Button)findViewById(R.id.btn_ret);
