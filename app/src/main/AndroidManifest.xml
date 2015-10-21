@@ -51,6 +51,10 @@
             android:name="com.ll.user.EditInfo"
             android:label="@string/title_activity_edit_info" >
         </activity>
+        <activity
+            android:name=".DeviceList"
+            android:label="@string/title_activity_device_list" >
+        </activity>
     </application>
 
 </manifest>

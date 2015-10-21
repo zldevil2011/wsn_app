@@ -78,6 +78,9 @@ public class MainActivity extends Activity {
                     break;
                 case ID+2:
                     Toast.makeText(MainActivity.this,setName(2), Toast.LENGTH_SHORT).show();
+                    Intent intent2 = new Intent(MainActivity.this, DeviceList.class);
+                    startActivity(intent2);
+//                    MainActivity.this.finish();
                     break;
                 case ID+3:
                     Toast.makeText(MainActivity.this,setName(3), Toast.LENGTH_SHORT).show();
@@ -113,7 +116,7 @@ public class MainActivity extends Activity {
             return "水质";
         }
         else if(i==2){
-            return "水产";
+            return "设备";
         }
         else if(i==3){
             return "个人";
