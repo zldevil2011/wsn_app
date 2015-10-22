@@ -2,8 +2,10 @@ package com.ll.util;
 
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -35,24 +37,24 @@ public class HttpMethod {
     }
 
 
-    public String getDataByGet(String path) throws Exception {
-        URL Url = new URL(path);
+    public JSONObject getDataByGet(String path) throws Exception {
         Log.v("zl_debug", path);
+        URL Url = new URL(path);
         HttpURLConnection HttpConn = (HttpURLConnection) Url.openConnection();
-        Log.v("zl_debug", "1");
         HttpConn.setRequestMethod("GET");
-        Log.v("zl_debug", "2");
         HttpConn.setReadTimeout(5000);
-        HttpConn.setDoOutput(false);
-        HttpConn.setRequestProperty("Content-Type", "application/json");
-//        OutputStream os = HttpConn.getOutputStream();
-        Log.v("zl_debug", "is it here?");
-        Log.v("zl_debug", String.valueOf(HttpConn.getResponseCode()));
+        JSONArray jsonArray = new JSONArray();
         if (HttpConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            Log.v("zl_debug", "ok");
-            return "login_success";
+            InputStreamReader isr = new InputStreamReader(HttpConn.getInputStream());
+            String content = "";
+            int i;
+            while ((i = isr.read()) != -1) {
+                content = content + (char) i;
+            }
+            isr.close();
+            JSONObject jsonObject = new JSONObject(content);
+            return jsonObject;
         }
-        Log.v("zl_debug", "sorry");
-        return "login_failed";
+        return null;
     }
 }

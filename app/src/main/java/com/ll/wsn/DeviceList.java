@@ -1,9 +1,14 @@
 package com.ll.wsn;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.View;
@@ -15,21 +20,94 @@ import android.widget.TextView;
 
 import com.ll.grid.ExtendableListView;
 import com.ll.grid.StaggeredGridView;
+import com.ll.util.HttpMethod;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Random;
 
 public class DeviceList extends Activity {
 
     private StaggeredGridView mGridView;
+    private String [] device_url = new String[100000];
+    private JSONArray jsonArray;
+    private JSONObject jsonObject;
+    private Bitmap[] bitmap = new Bitmap[100000];
+    private Bitmap tmp_bitmap;
+    private int Count = 0;
+    private String aim_url;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_list);
 
         mGridView = (StaggeredGridView) findViewById(R.id.grid_view);
+        initData();
+        for(int i = 0; i < bitmap.length; ++i){
+            Log.v("url", bitmap[i] + "");
+        }
         mGridView.setAdapter(new MyAdapter());
     }
-
+    public void initData(){
+        new Thread(runnable).start();
+    }
+    Runnable runnable = new Runnable(){
+        @Override
+        public void run() {
+//            Todo the request
+            HttpMethod http = new HttpMethod();
+            jsonObject = null;
+            String res = "failed";
+            try {
+                jsonObject = http.getDataByGet(getString(R.string.IP) + ":8089/api/data/device/");
+                res = "success";
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Message msg = new Message();
+            Bundle data = new Bundle();
+            data.putString("value",res);
+            msg.setData(data);
+            handler.sendMessage(msg);
+        }
+    };
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            Bundle data = msg.getData();
+            String val = data.getString("value");
+            Log.i("zl_debug","请求结果-->" + val);
+            try {
+                jsonArray = new JSONArray(jsonObject.getString("device"));
+                Log.v("zl_debug", String.valueOf(jsonArray));
+                for(int i = 0; i <jsonArray.length(); ++i){
+                    JSONObject tmp = jsonArray.getJSONObject(i);
+                    aim_url = tmp.getString("device_photo");
+//                    new Thread(runnable_getUrl).start();
+                    device_url[i] = tmp.getString("device_photo");
+                    Log.v("zl_debug_device_url", device_url[i]);
+                }
+            } catch (JSONException e) {
+                Log.v("zl_debug", "some error");
+                e.printStackTrace();
+            }
+            int count = 0;
+            try {
+                count = Integer.parseInt(jsonObject.getString("count"));
+                Log.v("zl_debug", count + "");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
     private class MyAdapter extends BaseAdapter {
 
         @Override
@@ -68,6 +146,7 @@ public class DeviceList extends Activity {
             LinearLayout view = (LinearLayout) convertView;
             view.setOrientation(LinearLayout.VERTICAL);
             view.setBackgroundColor(COLOR[position % 5]);
+//            image.setImageBitmap(bitmap[position]);	//设置Bitmap
             image.setImageResource(DATA[position % 7]);
             text.setText("测试设备");
             view.addView(image);
@@ -80,7 +159,52 @@ public class DeviceList extends Activity {
         }
 
     }
-
+    Runnable runnable_getUrl = new Runnable(){
+        @Override
+        public void run() {
+//            Todo the request
+            HttpMethod http = new HttpMethod();
+            jsonObject = null;
+            String res = "failed";
+            bitmap[Count] = getHttpBitmap(aim_url);
+            Count++;
+            Message msg = new Message();
+            Bundle data = new Bundle();
+            data.putString("value",res);
+            msg.setData(data);
+            handler_getUrl.sendMessage(msg);
+        }
+    };
+    Handler handler_getUrl = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            Bundle data = msg.getData();
+            String val = data.getString("value");
+            Log.i("zl_debug","请求结果-->" + val);
+        }
+    };
+    public static Bitmap getHttpBitmap(String url) {
+        URL myFileUrl = null;
+        Bitmap bitmap = null;
+        try {
+            myFileUrl = new URL(url);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        try {
+            HttpURLConnection conn = (HttpURLConnection) myFileUrl.openConnection();
+            conn.setConnectTimeout(0);
+            conn.setDoInput(true);
+            conn.connect();
+            InputStream is = conn.getInputStream();
+            bitmap = BitmapFactory.decodeStream(is);
+            is.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bitmap;
+    }
     private final Random mRandom = new Random();
     private static final SparseArray<Double> sPositionHeightRatios = new SparseArray<Double>();
     private double getPositionRatio(final int position) {
